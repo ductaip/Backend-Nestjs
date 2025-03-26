@@ -1,8 +1,8 @@
+import { Exclude } from 'class-transformer'
 import { Contains, IsString, MinLength } from 'class-validator'
 
 export class LoginBodyDTO {
     @IsString()
-    @MinLength(10, { message: `That's wrong bro` })
     @Contains('abc', { message: 'It must be contain `abc`' })
     email: string
 
@@ -17,4 +17,15 @@ export class RegisterBodyDTO extends LoginBodyDTO {
     @IsString()
     @MinLength(10)
     description: string
+}
+
+export class RegisterResDTO {
+    email: string
+    @Exclude() password: string
+    name: string
+    description: string
+
+    constructor(partial: Partial<RegisterResDTO>) {
+        Object.assign(this, partial)
+    }
 }
