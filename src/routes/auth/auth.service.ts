@@ -2,7 +2,7 @@ import { ConflictException, Injectable, UnauthorizedException, UnprocessableEnti
 import { Prisma } from '@prisma/client'
 import { HashingService } from 'src/shared/services/hashing.service'
 import { PrismaService } from 'src/shared/services/prisma.service'
-import { LoginBodyDTO } from './auth.dto'
+import { LoginBodyDTO, RegisterBodyDTO } from './auth.dto'
 import { TokenService } from 'src/shared/services/token.service'
 
 @Injectable()
@@ -13,7 +13,7 @@ export class AuthService {
         private readonly tokenService: TokenService,
     ) {}
 
-    async register(body: any) {
+    async register(body: RegisterBodyDTO) {
         try {
             const hashedPassword = await this.hashingService.hash(body.password)
 
@@ -22,7 +22,6 @@ export class AuthService {
                     email: body.email,
                     password: hashedPassword,
                     name: body.name,
-                    description: body.description,
                 },
             })
 

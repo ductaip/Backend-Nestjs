@@ -14,15 +14,14 @@ datasource db {
 }
 
 model User {
-  id          Int             @id @default(autoincrement())  
-  email       String          @unique                       
-  name        String        
-  description String          
-  password    String        
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
-  posts       Post[]
-  tokens      RefreshToken[]
+  id                Int             @id @default(autoincrement())  
+  email             String          @unique                       
+  name              String        
+  password          String        
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  posts             Post[]
+  tokens            RefreshToken[]
 }
 
 
