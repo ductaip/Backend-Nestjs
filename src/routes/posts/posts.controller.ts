@@ -1,31 +1,36 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common'
 import { PostsService } from './posts.service'
+import { AccessTokenGuard } from 'src/shared/guards/access-token.guard'
+import { APIKeyGuard } from 'src/shared/guards/api-key.guard'
 
 @Controller('posts')
 export class PostsController {
-  constructor(private readonly postsService: PostsService) {}
-  @Get()
-  getPosts() {
-    return this.postsService.getPosts()
-  }
+    constructor(private readonly postsService: PostsService) {}
 
-  @Post()
-  createPost(@Body() body: any) {
-    return this.postsService.createPost(body)
-  }
+    @UseGuards(AccessTokenGuard)
+    @UseGuards(APIKeyGuard)
+    @Get()
+    getPosts() {
+        return this.postsService.getPosts()
+    }
 
-  @Get(':id')
-  getPost(@Param('id') id: string) {
-    return this.postsService.getPost(id)
-  }
+    @Post()
+    createPost(@Body() body: any) {
+        return this.postsService.createPost(body)
+    }
 
-  @Put(':id')
-  updatePost(@Param('id') id: string, @Body() body: any) {
-    return this.postsService.updatePost(id, body)
-  }
+    @Get(':id')
+    getPost(@Param('id') id: string) {
+        return this.postsService.getPost(id)
+    }
 
-  @Delete(':id')
-  deletePost(@Param('id') id: string) {
-    return this.postsService.deletePost(id)
-  }
+    @Put(':id')
+    updatePost(@Param('id') id: string, @Body() body: any) {
+        return this.postsService.updatePost(id, body)
+    }
+
+    @Delete(':id')
+    deletePost(@Param('id') id: string) {
+        return this.postsService.deletePost(id)
+    }
 }
