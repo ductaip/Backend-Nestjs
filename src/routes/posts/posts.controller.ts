@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Req } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { PostsService } from './posts.service'
 // import { AuthenticationGuard } from 'src/shared/guards/authentication.guard'
 import { Auth } from 'src/shared/decorators/auth.decorator'
 import { AuthType, ConditionGuard } from 'src/shared/constants/auth.constant'
-import { Request } from 'express'
+import { ActiveUser } from 'src/shared/decorators/active-user.decorator'
+// import { TokenPayload } from 'src/shared/types/jwt.type'
 
 @Controller('posts')
 export class PostsController {
@@ -20,10 +21,9 @@ export class PostsController {
 
     @Post()
     @Auth([AuthType.Bearer, AuthType.APIKey], { condition: ConditionGuard.And })
-    createPost(@Body() body: any, @Req() request: Request) {
-        console.log(request.headers['x-api-key'])
-        console.log(request.headers['authorization'])
-        return this.postsService.createPost(body)
+    createPost(@Body() body: any, @ActiveUser('userId') userId: number) {
+        console.log('userId', userId)
+        return this.postsService.createPost(userId, body)
     }
 
     @Get(':id')
