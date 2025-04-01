@@ -107,4 +107,25 @@ export class AuthService {
             throw new UnauthorizedException('Maybe refreshToken is expired or invalid')
         }
     }
+
+    async logout(refreshToken: string) {
+        try {
+            //1.check that token is invalid/correct
+            await this.tokenService.verifyRefreshToken(refreshToken)
+            //2. Remove refreshToken from db
+            await this.prismaService.refreshToken.delete({
+                where: {
+                    token: refreshToken,
+                },
+            })
+
+            return { message: `Logout successfully` }
+        } catch (error) {
+            // the case that refreshToken is done, let notice for users to know their token is lost
+            if (isNotFoundPrismaError(error)) {
+                throw new UnauthorizedException('Refresh token has been revoked')
+            }
+            throw new UnauthorizedException('Maybe refreshToken is expired or invalid')
+        }
+    }
 }

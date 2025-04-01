@@ -47,3 +47,15 @@ export class RefreshTokenBodyDTO {
 }
 
 export class RefreshTokenResDTO extends LoginResDTO {}
+
+export class LogoutBodyDTO {
+    @IsString()
+    refreshToken: string
+}
+
+export class LogoutResDTO {
+    message: string
+    constructor(partial: Partial<LogoutResDTO>) {
+        Object.assign(this, partial)
+    }
+}

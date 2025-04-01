@@ -22,6 +22,7 @@ export class AuthenticationGuard implements CanActivate {
     }
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
+        console.log('authentication guard')
         const authTypeValue = this.reflector.getAllAndOverride<AuthTypeDecoratorPayload | undefined>(AUTH_TYPE_KEY, [
             context.getHandler(),
             context.getClass(),
