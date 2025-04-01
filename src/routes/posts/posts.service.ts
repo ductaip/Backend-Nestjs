@@ -12,7 +12,7 @@ export class PostsService {
     }
 
     createPost(body: any) {
-        const userId = 2
+        const userId = 5
         return this.prismaService.post.create({
             data: {
                 title: body.title,
