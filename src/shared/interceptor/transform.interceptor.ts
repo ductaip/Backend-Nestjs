@@ -14,7 +14,7 @@ export class TransformInterceptor<T> implements NestInterceptor<T, Response<T>> 
                 const ctx = context.switchToHttp()
                 const response = ctx.getResponse()
                 const statusCode = response.statusCode
-                console.log('>>response check: ', response)
+                // console.log('>>response check: ', response)
                 return { statusCode, data }
             }),
         )

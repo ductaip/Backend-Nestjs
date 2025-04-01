@@ -35,7 +35,6 @@ export class AuthController {
     @UseGuards(AccessTokenGuard)
     @HttpCode(HttpStatus.OK)
     async refreshToken(@Body() body: RefreshTokenBodyDTO) {
-        console.log('refreshToken right')
         return new RefreshTokenResDTO(await this.authService.refreshToken(body.refreshToken))
     }
 }
