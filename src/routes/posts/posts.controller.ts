@@ -4,7 +4,7 @@ import { PostsService } from './posts.service'
 import { Auth } from 'src/shared/decorators/auth.decorator'
 import { AuthType, ConditionGuard } from 'src/shared/constants/auth.constant'
 import { ActiveUser } from 'src/shared/decorators/active-user.decorator'
-import { GetPostItemDTO } from './post.dto'
+import { CreatePostBodyDTO, GetPostItemDTO, UpdatePostBodyDTO } from './post.dto'
 // import { TokenPayload } from 'src/shared/types/jwt.type'
 
 @Controller('posts')
@@ -21,20 +21,22 @@ export class PostsController {
     }
 
     @Post()
-    @Auth([AuthType.Bearer, AuthType.APIKey], { condition: ConditionGuard.And })
-    createPost(@Body() body: any, @ActiveUser('userId') userId: number) {
+    @Auth([AuthType.Bearer, AuthType.APIKey], { condition: ConditionGuard.Or })
+    async createPost(@Body() body: CreatePostBodyDTO, @ActiveUser('userId') userId: number) {
         console.log('userId', userId)
-        return this.postsService.createPost(userId, body)
+        return new GetPostItemDTO(await this.postsService.createPost(userId, body))
     }
 
     @Get(':id')
-    getPost(@Param('id') id: string) {
-        return this.postsService.getPost(id)
+    async getPost(@Param('id') id: string) {
+        const result = await this.postsService.getPost(Number(id))
+        console.log('result', result)
+        return new GetPostItemDTO(result)
     }
 
     @Put(':id')
-    updatePost(@Param('id') id: string, @Body() body: any) {
-        return this.postsService.updatePost(id, body)
+    async updatePost(@Param('id') id: string, @Body() body: UpdatePostBodyDTO) {
+        return new GetPostItemDTO(await this.postsService.updatePost(Number(id), body))
     }
 
     @Delete(':id')
