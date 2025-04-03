@@ -14,7 +14,6 @@ export class PostsController {
     // @UseGuards(AccessTokenGuard)
     // @UseGuards(APIKeyGuard)
     // @UseGuards(AuthenticationGuard)
-    @Auth([AuthType.Bearer, AuthType.APIKey], { condition: ConditionGuard.And })
     @Get()
     getPosts(@ActiveUser('userId') userId: number) {
         return this.postsService.getPosts(userId).then((posts) => posts.map((post) => new GetPostItemDTO(post)))
@@ -35,12 +34,23 @@ export class PostsController {
     }
 
     @Put(':id')
-    async updatePost(@Param('id') id: string, @Body() body: UpdatePostBodyDTO) {
-        return new GetPostItemDTO(await this.postsService.updatePost(Number(id), body))
+    @Auth([AuthType.Bearer])
+    async updatePost(@Param('id') id: string, @Body() body: UpdatePostBodyDTO, @ActiveUser('userId') userId: number) {
+        return new GetPostItemDTO(
+            await this.postsService.updatePost({
+                postId: Number(id),
+                userId,
+                body,
+            }),
+        )
     }
 
     @Delete(':id')
-    deletePost(@Param('id') id: string) {
-        return this.postsService.deletePost(id)
+    @Auth([AuthType.Bearer])
+    deletePost(@Param('id') id: string, @ActiveUser('userId') userId: number) {
+        return this.postsService.deletePost({
+            postId: Number(id),
+            userId,
+        })
     }
 }

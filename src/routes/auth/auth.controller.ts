@@ -27,7 +27,6 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     async login(@Body() body: LoginBodyDTO) {
         const result = await this.authService.login(body)
-
         return new LoginResDTO(result)
     }
 
